@@ -219,10 +219,10 @@ docker-compose down -v
 │   │       └── datasources/
 │   └── prometheus.yml          # Config de scrape do Prometheus
 ├── docker-compose.yml          # Orquestrador principal
-├── resilient-client/           # Projeto Spring (O Herói)
+├── client/                     # Projeto Spring (O Herói)
 │   ├── Dockerfile
 │   └── pom.xml
-└── unreliable-provider/        # Projeto Spring (O Vilão)
+└── api/                        # Projeto Spring (O Vilão)
     ├── Dockerfile
     └── pom.xml
 ```
