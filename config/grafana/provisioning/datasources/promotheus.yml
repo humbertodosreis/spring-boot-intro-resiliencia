@@ -1,0 +1,18 @@
+# API Version 1
+apiVersion: 1
+
+# Lista de data sources
+datasources:
+  # Nome do Data Source
+  - name: Prometheus
+    type: prometheus
+    # URL do serviço Prometheus (como definido no docker-compose.yml)
+    url: http://prometheus:9090
+    # Modo de acesso (proxy é o recomendado)
+    access: proxy
+    # Torna este o data source padrão
+    isDefault: true
+    # Impede edições pela UI (bom para demo)
+    editable: false
+    jsonData:
+      timeInterval: 5s

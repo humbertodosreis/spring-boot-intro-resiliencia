@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: 'spring-micrometer'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      # Nomes dos serviços definidos no docker-compose
+      - targets: ['resilient-client:8080']
+      - targets: ['unreliable-provider:8081']

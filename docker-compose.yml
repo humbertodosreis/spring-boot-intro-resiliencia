@@ -1,0 +1,44 @@
+services:
+  unreliable-provider:
+    build: ./api
+    environment:
+      - APP_NAME=api
+    ports:
+      - "8081:8081" # Porta do provider
+    command: ["java", "-jar", "/app.jar", "--server.port=8081"]
+
+  resilient-client:
+    build: ./client
+    environment:
+      - APP_NAME=resilient-client
+    ports:
+      - "8080:8080" # Porta do client
+    command: ["java", "-jar", "/app.jar", "--server.port=8080"]
+    depends_on: [unreliable-provider]
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./config/grafana/dashboards/:/etc/grafana/dashboards/
+      - ./config/grafana/custom.ini:/etc/grafana/grafana.ini
+    environment:
+      # Opcional: Pula a tela de login (admin/admin)
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_PLUGINS_PREINSTALL=grafana-clock-panel, grafana-simple-json-datasource
+    depends_on: [prometheus]
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"

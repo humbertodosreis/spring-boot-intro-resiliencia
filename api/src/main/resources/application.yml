@@ -1,0 +1,22 @@
+spring:
+  application:
+    # ${APP_NAME} será injetado pelo Docker Compose
+    name: ${APP_NAME:unreliable-provider}
+  # zipkin:
+  #   base-url: ${ZIPKIN_URL:http://zipkin:9411}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL:http://zipkin:9411}/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+  metrics:
+    tags:
+      application: ${spring.application.name}

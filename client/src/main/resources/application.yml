@@ -1,0 +1,43 @@
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+    threads:
+      # Pool pequeno para a demo de exaustão
+      max: 10
+
+spring:
+  application:
+    name: ${APP_NAME:resilient-client}
+  cloud:
+    openfeign:
+      micrometer:
+        enabled: true
+      client:
+        config:
+          # default:
+          #   connectTimeout: 2000
+          #   readTimeout: 5000
+          providerLongClient:
+            connectTimeout: 1000
+            readTimeout: 30000
+            url: ${API_URL:http://unreliable-provider:8081}
+          providerShortClient:
+            connectTimeout: 1000
+            readTimeout: 2000
+            url: ${API_URL:http://unreliable-provider:8081}
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL:http://zipkin:9411}/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
